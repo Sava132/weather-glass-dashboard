@@ -2,18 +2,42 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>JS Dev Portfolio | Task Manager</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pro Dashboard | JS & API</title>
     <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div class="app-card">
-        <h1>DevFlow <span class="badge">v1.0</span></h1>
-        <div class="input-box">
-            <input type="text" id="taskInput" placeholder="Enter your next sprint task...">
-            <button id="addBtn">Push Task</button>
+    <div class="dashboard">
+        <div class="card weather-card">
+            <h2>Weather Monitor</h2>
+            <div class="search-box">
+                <input type="text" id="cityInput" placeholder="Enter city...">
+                <button onclick="getWeather()">Check</button>
+            </div>
+            <div id="weatherResult" class="result">
+                <h3 id="cityName">Berlin</h3>
+                <div class="weather-icon" id="weatherIcon">☁️</div>
+                <div class="temp" id="temp">--°C</div>
+                <p id="description">Waiting for input...</p>
+            </div>
         </div>
-        <div id="status">Active Tasks: <span id="count">0</span></div>
-        <ul id="taskList"></ul>
+
+        <div class="card crypto-card">
+            <h2>Crypto Tracker</h2>
+            <div class="crypto-list">
+                <div class="coin">
+                    <span>BTC:</span>
+                    <span id="btcPrice" class="price">Loading...</span>
+                </div>
+                <div class="coin">
+                    <span>ETH:</span>
+                    <span id="ethPrice" class="price">Loading...</span>
+                </div>
+            </div>
+            <button onclick="getCrypto()">Refresh Market</button>
+            <p class="last-sync">Last sync: <span id="syncTime">--:--:--</span></p>
+        </div>
     </div>
     <script src="script.js"></script>
 </body>

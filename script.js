@@ -1,46 +1,45 @@
-// Конфигурация приложения
-const taskApp = {
-    tasks: [],
-    
-    // Метод добавления задачи
-    addTask: (text) => {
-        if (!text.trim()) return;
-        
-        const newTask = {
-            id: Date.now(),
-            content: text,
-            status: 'active'
-        };
-        
-        taskApp.tasks.push(newTask);
-        taskApp.render();
-    },
+// OpenWeatherMap API Key
+const apiKey = 'Your API Key'; 
 
-    // Метод удаления
-    deleteTask: (id) => {
-        taskApp.tasks = taskApp.tasks.filter(t => t.id !== id);
-        taskApp.render();
-    },
+// 1. Функция для погоды
+async function getWeather() {
+    const city = document.getElementById('cityInput').value;
+    if (!city) return alert('Please enter a city');
 
-    // Отрисовка интерфейса
-    render: () => {
-        const list = document.getElementById('taskList');
-        const count = document.getElementById('count');
-        
-        list.innerHTML = taskApp.tasks.map(task => `
-            <li>
-                <span>${task.content}</span>
-                <span class="delete-btn" onclick="taskApp.deleteTask(${task.id})">Remove</span>
-            </li>
-        `).join('');
-        
-        count.innerText = taskApp.tasks.length;
+    try {
+        const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`);
+        const data = await response.json();
+
+        if (data.cod === 200) {
+            document.getElementById('cityName').innerText = data.name;
+            document.getElementById('temp').innerText = `${Math.round(data.main.temp)}°C`;
+            document.getElementById('description').innerText = data.weather[0].description;
+            // Иконка погоды
+            const iconCode = data.weather[0].icon;
+            document.getElementById('weatherIcon').innerHTML = `<img src="https://openweathermap.org/img/wn/${iconCode}@2x.png">`;
+        } else {
+            alert('City not found');
+        }
+    } catch (error) {
+        console.error('Error fetching weather:', error);
     }
-};
+}
 
-// Слушатель событий
-document.getElementById('addBtn').addEventListener('click', () => {
-    const input = document.getElementById('taskInput');
-    taskApp.addTask(input.value);
-    input.value = '';
-});
+// 2. Функция для крипты
+async function getCrypto() {
+    try {
+        const response = await fetch('https://api.coingecko.org/api/v3/simple/price?ids=bitcoin,ethereum&vs_currencies=usd');
+        const data = await response.json();
+
+        document.getElementById('btcPrice').innerText = `$${data.bitcoin.usd.toLocaleString()}`;
+        document.getElementById('ethPrice').innerText = `$${data.ethereum.usd.toLocaleString()}`;
+        
+        const now = new Date();
+        document.getElementById('syncTime').innerText = now.toLocaleTimeString();
+    } catch (error) {
+        console.error('Error fetching crypto:', error);
+    }
+}
+
+// Запускаем крипту при загрузке
+getCrypto();
